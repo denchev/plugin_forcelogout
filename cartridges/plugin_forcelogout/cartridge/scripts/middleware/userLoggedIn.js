@@ -54,8 +54,4 @@ function validateLoggedInAjax(req, res, next) {
     base.validateLoggedInAjax(req, res, next);
 }
 
-module.exports = {
-    logoutMultipleSessions: logoutMultipleSessions,
-    validateLoggedIn: validateLoggedIn,
-    validateLoggedInAjax: validateLoggedInAjax
-}
+module.exports = base;
