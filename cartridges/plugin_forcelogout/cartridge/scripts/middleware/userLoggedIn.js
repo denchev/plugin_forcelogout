@@ -59,6 +59,5 @@ function validateLoggedInAjax(req, res, next) {
     base.validateLoggedInAjax(req, res, next);
 }
 
-module.exports = {
-    logoutMultipleSessions: logoutMultipleSessions
-};
+module.exports = base||{}; // hack to allow execution in Node and SFCC
+module.exports.logoutMultipleSessions = logoutMultipleSessions;
