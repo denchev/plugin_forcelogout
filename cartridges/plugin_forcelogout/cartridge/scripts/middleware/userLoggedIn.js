@@ -5,30 +5,35 @@ var base = module.superModule;
 var CustomerMgr = require('dw/customer/CustomerMgr');
 
 function logoutMultipleSessions(req) {
-    var Site = require('dw/system/Site');
-    var currentSite = Site.getCurrent();
+    try {
+        var Site = require('dw/system/Site');
+        var currentSite = Site.getCurrent();
 
-    if (currentSite.getCustomPreferenceValue('enableForceLogout')) {
-        const profile = req.currentCustomer.raw.profile;
+        if (currentSite.getCustomPreferenceValue('enableForceLogout')) {
+            const profile = req.currentCustomer.raw.profile;
 
-        if(profile) {
-            let activeLoginSessions;
-            try {
-                activeLoginSessions = JSON.parse(profile.custom.loginId);
-            } catch (e) {
-                activeLoginSessions = [];
-            }
-            let isSessionAlive = false;
-            activeLoginSessions.forEach(function (activeSessionId) {
-                if (activeSessionId.loginId === session.custom.loginId) {
-                    isSessionAlive = true;
+            if(profile) {
+                let activeLogins;
+                try {
+                    activeLogins = JSON.parse(profile.custom.activeLogins);
+                } catch (e) {
+                    activeLogins = [];
                 }
-            });
+                let keepLogin = false;
+                activeLogins.forEach(function (activeLogin) {
+                    if (activeLogin === session.custom.loginId) {
+                        keepLogin = true;
+                    }
+                });
 
-            if (isSessionAlive === false) {
-                CustomerMgr.logoutCustomer(true);
+                if (keepLogin === false) {
+                    CustomerMgr.logoutCustomer(true);
+                }
             }
         }
+    } catch (e) {
+        var Logger = require('dw/system/Logger');
+        Logger.error('The following error occured in plugin_forcelogout: ' + e.message);
     }
 }
 

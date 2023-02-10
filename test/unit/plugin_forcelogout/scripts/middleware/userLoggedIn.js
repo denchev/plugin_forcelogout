@@ -50,7 +50,7 @@ describe('userLoggedInMiddleware', function() {
                 raw: {
                     profile: {
                         custom: {
-                            loginId: '[{"loginId": 123}]'
+                            loginId: '[123]'
                         }
                     }
                 }
@@ -67,7 +67,7 @@ describe('userLoggedInMiddleware', function() {
                 raw: {
                     profile: {
                         custom: {
-                            loginId: '[{loginId: 123}]' // invalid JSON on purpose
+                            loginId: '[123}]' // invalid JSON on purpose
                         }
                     }
                 }

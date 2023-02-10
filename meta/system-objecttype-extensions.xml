@@ -2,20 +2,28 @@
 <metadata xmlns="http://www.demandware.com/xml/impex/metadata/2006-10-31">
     <type-extension type-id="Profile">
         <custom-attribute-definitions>
-            <attribute-definition attribute-id="loginId">
-                <display-name xml:lang="x-default">Login ID</display-name>
+            <attribute-definition attribute-id="activeLogins">
+                <display-name xml:lang="x-default">Active Logins</display-name>
                 <type>text</type>
                 <mandatory-flag>false</mandatory-flag>
-                <externally-managed-flag>false</externally-managed-flag>
+                <externally-managed-flag>true</externally-managed-flag>
             </attribute-definition>
         </custom-attribute-definitions>
     </type-extension>
 
-     <type-extension type-id="SitePreferences">
+    <type-extension type-id="SitePreferences">
         <custom-attribute-definitions>
-            <attribute-definition attribute-id="enableForceLogout">
-                <display-name xml:lang="x-default">Enable Force Logout</display-name>
+            <attribute-definition attribute-id="enableForceLogoutPostPasswordChange">
+                <display-name xml:lang="x-default">Enable Force Logout after password change</display-name>
                 <description xml:lang="x-default">When enabled, customers who have logged in into multiple browsers/sessions will be forcefully logged out, when on any of the sessions the customer password is changed.</description>
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <default-value>false</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="enableForceLogoutPostLogin">
+                <display-name xml:lang="x-default">Enable Force Logout after login</display-name>
+                <description xml:lang="x-default">When enabled, customers will not be able to login to more than one session at the time.</description>
                 <type>boolean</type>
                 <mandatory-flag>false</mandatory-flag>
                 <externally-managed-flag>false</externally-managed-flag>
@@ -25,7 +33,8 @@
         <group-definitions>
             <attribute-group group-id="Force Logout">
                 <display-name xml:lang="x-default">Force Logout Configurations</display-name>
-                <attribute attribute-id="enableForceLogout"/>
+                <attribute attribute-id="enableForceLogoutPostPasswordChange"/>
+                <attribute attribute-id="enableForceLogoutPostLogin"/>
             </attribute-group>
         </group-definitions>
     </type-extension>
