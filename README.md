@@ -8,7 +8,7 @@ This cartridge works with compatibility mode of 18.10 and newer
 
 ## Tests
 
-plugin_forcelogout does not have yet unit or end-to-end tests
+plugin_forcelogout has standard unit tests. Integration tests require additional software (such as puppeteer) to handle the complex case.
 
 ## Installation
 Configure cartridge path with `plugin_forcelogout` before `app_storefront_base`. Like that `plugin_forcelogout:app_storefront_base`

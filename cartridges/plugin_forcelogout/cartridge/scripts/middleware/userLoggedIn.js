@@ -12,7 +12,12 @@ function logoutMultipleSessions(req) {
         const profile = req.currentCustomer.raw.profile;
 
         if(profile) {
-            const activeLoginSessions = profile.custom.loginId == null ? [] : JSON.parse(profile.custom.loginId);
+            let activeLoginSessions;
+            try {
+                activeLoginSessions = JSON.parse(profile.custom.loginId);
+            } catch (e) {
+                activeLoginSessions = [];
+            }
             let isSessionAlive = false;
             activeLoginSessions.forEach(function (activeSessionId) {
                 if (activeSessionId.loginId === session.custom.loginId) {
@@ -54,4 +59,6 @@ function validateLoggedInAjax(req, res, next) {
     base.validateLoggedInAjax(req, res, next);
 }
 
-module.exports = base;
+module.exports = {
+    logoutMultipleSessions: logoutMultipleSessions
+};
