@@ -2,24 +2,14 @@
 
 var base = module.superModule;
 
-var CustomerMgr = require('dw/customer/CustomerMgr');
-
 function logoutMultipleSessions(req) {
     try {
-        var Site = require('dw/system/Site');
-        var currentSite = Site.getCurrent();
-
-        if (currentSite.getCustomPreferenceValue('enableForceLogout')) {
+        if (require('~/cartridge/scripts/helpers/preferences').getForceLogoutMode()) {
             const profile = req.currentCustomer.raw.profile;
 
             if(profile) {
-                let activeLogins;
-                try {
-                    activeLogins = JSON.parse(profile.custom.activeLogins);
-                } catch (e) {
-                    activeLogins = [];
-                }
-                let keepLogin = false;
+                var activeLogins = JSON.parse(profile.custom.activeLogins);
+                var keepLogin = false;
                 activeLogins.forEach(function (activeLogin) {
                     if (activeLogin === session.custom.loginId) {
                         keepLogin = true;
@@ -27,6 +17,7 @@ function logoutMultipleSessions(req) {
                 });
 
                 if (keepLogin === false) {
+                    var CustomerMgr = require('dw/customer/CustomerMgr');
                     CustomerMgr.logoutCustomer(true);
                 }
             }
@@ -64,5 +55,8 @@ function validateLoggedInAjax(req, res, next) {
     base.validateLoggedInAjax(req, res, next);
 }
 
-module.exports = base||{}; // hack to allow execution in Node and SFCC
-module.exports.logoutMultipleSessions = logoutMultipleSessions;
+module.exports = {
+    validateLoggedIn: validateLoggedIn,
+    validateLoggedInAjax: validateLoggedInAjax,
+    logoutMultipleSessions: logoutMultipleSessions
+};

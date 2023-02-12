@@ -11,7 +11,8 @@ server.prepend('Logout', function (req, res, next) {
         if(profile) {
             const activeLogins = profile.custom.activeLogins == null ? [] : JSON.parse(profile.custom.activeLogins);
             let remainingActiveLogins = [];
-            remainingActiveLogins.forEach(function (activeLogin) {
+            activeLogins.forEach(function (activeLogin) {
+                var loginId = session.custom.loginId;
                 if (activeLogin !== session.custom.loginId) {
                     remainingActiveLogins.push(activeLogin);
                 }
@@ -20,7 +21,7 @@ server.prepend('Logout', function (req, res, next) {
             var Transaction = require('dw/system/Transaction');
             
             Transaction.wrap(function () {
-                customer.profile.custom.activeLogins = JSON.stringify(remainingActiveSessions);
+                customer.profile.custom.activeLogins = JSON.stringify(remainingActiveLogins);
             });
         }
     } catch(e) {

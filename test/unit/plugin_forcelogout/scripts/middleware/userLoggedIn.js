@@ -5,8 +5,11 @@ var sinon = require('sinon');
 var proxyquire = require('proxyquire').noCallThru().noPreserveCache();
 
 var CustomerMgr = {
-    logoutCustomer: function () {
-    }
+    logoutCustomer: function () {}
+}
+
+var Logger = {
+    error: function() {}
 }
 
 var userLoggedInMiddleware = proxyquire('../../../../../cartridges/plugin_forcelogout/cartridge/scripts/middleware/userLoggedIn', {
@@ -24,6 +27,12 @@ var userLoggedInMiddleware = proxyquire('../../../../../cartridges/plugin_forcel
                 }
             }
         }
+    },
+    'dw/system/Logger': Logger,
+    '~/cartridge/scripts/helpers/preferences': {
+        getForceLogoutMode: function() {
+            return true;
+        }
     }
 });
 
@@ -38,6 +47,7 @@ describe('userLoggedInMiddleware', function() {
 
     beforeEach(function () {
         sandbox.spy(CustomerMgr);
+        sandbox.spy(Logger);
     });
 
     afterEach(function () {
@@ -50,7 +60,7 @@ describe('userLoggedInMiddleware', function() {
                 raw: {
                     profile: {
                         custom: {
-                            loginId: '[123]'
+                            activeLogins: '[123]'
                         }
                     }
                 }
@@ -61,13 +71,13 @@ describe('userLoggedInMiddleware', function() {
         assert.isTrue(CustomerMgr.logoutCustomer.called);
     });
 
-    it('should handle invalid JSON', function () {
+    it('should not logout customer if his loginId is in customer loginId list', function () {
         var req = {
             currentCustomer: {
                 raw: {
                     profile: {
                         custom: {
-                            loginId: '[123}]' // invalid JSON on purpose
+                            activeLogins: '[456]'
                         }
                     }
                 }
@@ -75,6 +85,23 @@ describe('userLoggedInMiddleware', function() {
         };
 
         userLoggedInMiddleware.logoutMultipleSessions(req);
-        assert.isTrue(CustomerMgr.logoutCustomer.called);
+        assert.isFalse(CustomerMgr.logoutCustomer.called);
+    });
+
+    it('should handle invalid JSON', function () {
+        var req = {
+            currentCustomer: {
+                raw: {
+                    profile: {
+                        custom: {
+                            activeLogins: '[123}]' // invalid JSON on purpose
+                        }
+                    }
+                }
+            }
+        };
+
+        userLoggedInMiddleware.logoutMultipleSessions(req);
+        assert.isTrue(Logger.error.called);
     });
 });

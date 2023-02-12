@@ -13,28 +13,31 @@
 
     <type-extension type-id="SitePreferences">
         <custom-attribute-definitions>
-            <attribute-definition attribute-id="enableForceLogoutPostPasswordChange">
-                <display-name xml:lang="x-default">Enable Force Logout after password change</display-name>
-                <description xml:lang="x-default">When enabled, customers who have logged in into multiple browsers/sessions will be forcefully logged out, when on any of the sessions the customer password is changed.</description>
-                <type>boolean</type>
+            <attribute-definition attribute-id="forceLogoutMode">
+                <display-name xml:lang="x-default">Force Logout Mode</display-name>
+                <type>enum-of-string</type>
                 <mandatory-flag>false</mandatory-flag>
                 <externally-managed-flag>false</externally-managed-flag>
-                <default-value>false</default-value>
-            </attribute-definition>
-            <attribute-definition attribute-id="enableForceLogoutPostLogin">
-                <display-name xml:lang="x-default">Enable Force Logout after login</display-name>
-                <description xml:lang="x-default">When enabled, customers will not be able to login to more than one session at the time.</description>
-                <type>boolean</type>
-                <mandatory-flag>false</mandatory-flag>
-                <externally-managed-flag>false</externally-managed-flag>
-                <default-value>false</default-value>
+                <value-definitions>
+                    <value-definition default="true">
+                        <display xml:lang="x-default">Disabled</display>
+                        <value>0</value>
+                    </value-definition>
+                    <value-definition>
+                        <display xml:lang="x-default">One login at a time</display>
+                        <value>1</value>
+                    </value-definition>
+                    <value-definition>
+                        <display xml:lang="x-default">Logout after password change</display>
+                        <value>2</value>
+                    </value-definition>
+                </value-definitions>
             </attribute-definition>
         </custom-attribute-definitions>
         <group-definitions>
             <attribute-group group-id="Force Logout">
                 <display-name xml:lang="x-default">Force Logout Configurations</display-name>
-                <attribute attribute-id="enableForceLogoutPostPasswordChange"/>
-                <attribute attribute-id="enableForceLogoutPostLogin"/>
+                <attribute attribute-id="forceLogoutMode"/>
             </attribute-group>
         </group-definitions>
     </type-extension>
